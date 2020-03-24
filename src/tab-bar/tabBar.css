@@ -1,0 +1,21 @@
+.tabs {
+    color: #03dac6;
+}
+
+.ant-tabs-tab-active {
+    font-weight: bolder;
+    color: #03dac6 !important;
+}
+
+.ant-tabs-ink-bar, .ant-tabs-ink-bar-animated {
+    background-color: #03dac6 !important;
+}
+
+.ant-tabs-tab:hover {
+    color: whitesmoke !important;
+}
+
+.ant-tabs-bar {
+    border-bottom: 1px solid #424242;
+}
+

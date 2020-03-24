@@ -1,0 +1,29 @@
+.table-container {
+    margin-left: 10vh;
+    margin-right: 10vh;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #03dac6;
+    border-color: #03dac6;
+}
+
+
+.ant-table-thead > tr > th {
+    background: #03dac6 !important;
+}
+
+.ant-pagination-item-link {
+    background-color: #03dac6 !important;
+    border-color: transparent !important;
+}
+
+.ant-pagination-item-active {
+    background-color: #03dac6 !important;
+    border-color: transparent !important;
+}
+
+.yeet {
+    text-align: center;
+}
+

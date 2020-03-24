@@ -1,0 +1,8 @@
+@import '~antd/dist/antd.css';
+
+
+.appContainer {
+    margin-left: 2vh;
+    margin-right: 2vh;
+}
+

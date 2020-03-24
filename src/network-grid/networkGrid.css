@@ -1,0 +1,34 @@
+.site-card-wrapper {
+    background: #303030;
+    padding: 5vh;
+    margin-left: 3vh;
+    margin-right: 3vh;
+}
+
+.ant-spin {
+    margin-left: 46%;
+}
+
+.card-text {
+    color: #03dac6;
+}
+  
+.ant-card-body:hover {
+    -webkit-box-shadow:inset 0px 0px 0px 1px #03dac6;
+    -moz-box-shadow:inset 0px 0px 0px 1px #03dac6;  
+    box-shadow:inset 0px 0px 0px 1px #03dac6;
+}
+
+.hrChange {
+    border: 1px solid #03dac6;
+    border-radius: 1px;
+}
+
+.ant-notification-notice {
+    background: #303030 !important;
+}
+
+.ant-notification-notice-message {
+    color: #03dac6
+}
+

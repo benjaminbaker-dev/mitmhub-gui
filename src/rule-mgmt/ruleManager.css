@@ -1,0 +1,77 @@
+.container {
+    background: #303030;
+    padding: 5vh;
+    margin-left: 3vh;
+    margin-right: 3vh;
+}
+
+.ant-spin {
+    margin-top: 3vh;
+    margin-left: 50%;
+}
+
+.ant-dropdown-link, .ant-select-selection-selected-value {
+    color: #03dac6;
+}
+
+.ant-select-selection, .ant-select-dropdown-menu {
+    background-color: #303030 !important;
+}
+  
+.menu-text {
+    color: #03dac6;
+ }
+
+.first-subtitle {
+    margin-bottom: 1vh;
+    color: #03dac6;
+    font-size: 2em;
+}
+
+.subtitle {
+    margin-top: 2vh;
+    margin-bottom: 1vh;
+    color: #03dac6;
+    font-size: 2em;
+}
+
+.ant-btn, .ant-btn:focus {
+    background-color: #03dac6;
+    border-color: transparent;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+}
+
+.ant-btn:hover {
+    background-color: whitesmoke;
+    color: #03dac6;
+    border-color: transparent;
+}
+
+.submit-div {
+    text-align: center;
+}
+
+.ant-notification-notice {
+    background: #303030 !important;
+}
+
+.ant-notification-notice-message {
+    color: #03dac6
+}
+
+.param-title {
+    color: #03dac6;
+    font-size: 1em;
+}
+
+.ant-input {
+    background-color: #424242;
+    color: #03dac6;
+    width: 40vh;
+    margin-bottom: 1vh;
+}
+
+.ant-input:hover {
+    border-color: #03dac6;
+}
