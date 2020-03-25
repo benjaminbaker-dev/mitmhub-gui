@@ -52,7 +52,6 @@ export default class NetworkGrid extends Component {
       );
 
     componentDidMount() {
-        console.log("try");
         get_nodes()
             .then(resp => resp.json())
             .then(json_data => this.setState({nodes: json_data["network_nodes"]}))
