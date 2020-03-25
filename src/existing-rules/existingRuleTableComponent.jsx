@@ -27,26 +27,47 @@ export default class ExistingRuleTable extends Component {
 
   componentDidUpdate() {
     get_active_rules(this.props.mac)
-    .then(resp => resp.json())
-    .then(json_data => {
-        const rule_data = json_data["response"]
-        let data = []
+      .then(resp => resp.json())
+      .then(json_data => {
+          const rule_data = json_data["response"]
+          let data = []
 
-        for(let rule_index in rule_data) {
-            data.push({
-              "key": rule_index, 
-              "index": rule_index,
-              "name": rule_data[rule_index]["filter_name"],
-              "params": JSON.stringify(rule_data[rule_index]["filter_args"])
-            })
-        }
-        this.setState({data: data})
-    })
+          for(let rule_index in rule_data) {
+              data.push({
+                "key": rule_index, 
+                "index": rule_index,
+                "name": rule_data[rule_index]["filter_name"],
+                "params": JSON.stringify(rule_data[rule_index]["filter_args"])
+              })
+          }
+  
+          if(JSON.stringify(data) !== JSON.stringify(this.state.data)) {
+              this.setState({data: data})
+          }
+
+      })
   }
 
   onSelectChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
+
+  removeDeletedRule(deleted_row_index) {
+    let data = this.state.data;
+    let index_to_remove = -1
+
+    for(let index in data) {
+      if(data[index]["key"] === deleted_row_index) {
+        index_to_remove = index
+        break;
+      }
+    }
+
+    if(index_to_remove) {
+      data.splice(index_to_remove, 1)
+      this.setState({data: data})
+    }
+  }
 
   render() {
     const rowSelection = {
@@ -62,7 +83,7 @@ export default class ExistingRuleTable extends Component {
             remove_rule(this.props.mac, this.state.selectedRowKeys[0])
               .then(resp => resp.json())
               .then(json_data => {
-                  //this.setState({data: []})
+                  this.removeDeletedRule(this.state.selectedRowKeys[0])
                   notification.open({"message": json_data["status"]})
             }); 
           } else {
