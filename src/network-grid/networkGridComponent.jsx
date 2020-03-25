@@ -52,11 +52,13 @@ export default class NetworkGrid extends Component {
       );
 
     componentDidMount() {
+        console.log("try");
         get_nodes()
             .then(resp => resp.json())
-            .then(json_data =>
-                    this.setState({nodes: json_data["network_nodes"]})
-                )
+            .then(json_data => this.setState({nodes: json_data["network_nodes"]}))
+            .catch(e => {
+                this.setState({nodes: []})
+            })
     }
     
     _addTagsToNode(mac, tags) {
@@ -136,10 +138,19 @@ export default class NetworkGrid extends Component {
         return rows
     }
 
+    chooseRender() {
+        if(this.state.nodes.length) {
+            return this._generateGrid()
+        } else {
+            this.componentDidMount();
+            return(<Spin size="large"/>)
+        }
+    }
+
     render() {
         return(
-        <div className="site-card-wrapper">
-            {(this.state.nodes.length && this._generateGrid()) || <Spin size="large"/>}
-        </div>
+            <div className="site-card-wrapper">
+                {this.chooseRender()}
+            </div>
         )}
 }

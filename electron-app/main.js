@@ -1,17 +1,27 @@
 const { app, BrowserWindow } = require('electron')
+var sudo = require('sudo-prompt');
+var options = {
+  name: 'MITMhub'
+};
+
 
 function createWindow () {
-    // Create the browser window.
     const win = new BrowserWindow({
       width: 800,
-      height: 600,
+      height: 650,
       webPreferences: {
         nodeIntegration: true
       }
     })
-  
-    // and load the index.html of the app.
-    win.loadURL('http://localhost:3000/')
+    
+    sudo.exec('python3 /Users/benjaminbaker/Desktop/mitmhub/server.py', options, 
+      function(error, stdout, stderr) {
+        if (error) {
+          throw error;
+        } 
+      }
+    );
+    win.loadURL("http://localhost:3000")
   }
 
   
