@@ -14,6 +14,11 @@
     color: #03dac6;
 }
 
+.ant-select-search__field {
+    color: #03dac6;
+}
+
+
 .ant-select-selection, .ant-select-dropdown-menu {
     background-color: #303030 !important;
 }

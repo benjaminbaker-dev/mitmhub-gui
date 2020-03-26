@@ -88,10 +88,18 @@ export default class RuleManager extends Component {
                     <div className="subtitle">
                     Node and Rule
                     </div>
-                    <Select defaultValue="Pick node" style={{ width: 200, marginRight: "1vh" }} onChange={e => {this._updateSelectedNodeAndGetRuleOptions({selected_node:e, rule_options: {}, selected_rule: null})}}>
+                    <Select 
+                        defaultValue="Pick node" 
+                        style={{ width: 200, marginRight: "1vh" }} 
+                        showSearch
+                        onChange={e => {this._updateSelectedNodeAndGetRuleOptions({selected_node:e, rule_options: {}, selected_rule: null})}}>
                         {this._generateNodeOptions()}
                     </Select>
-                    <Select defaultValue="Pick rule"  style={{ width: 200 }} onChange={e => this.setState({selected_rule: e})}>
+                    <Select 
+                        defaultValue="Pick rule"  
+                        style={{ width: 200 }} 
+                        showSearch
+                        onChange={e => this.setState({selected_rule: e})}>
                         {this._generateRuleOptions()}
                     </Select>
                     <div className="subtitle">
