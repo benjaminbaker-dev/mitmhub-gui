@@ -152,9 +152,9 @@ export default class RuleManager extends Component {
             )
         }
     }
-x
 
     render() {
         return this.chooseRender()
     }
 }
+

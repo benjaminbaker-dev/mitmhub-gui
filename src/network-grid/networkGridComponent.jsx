@@ -156,19 +156,6 @@ export default class NetworkGrid extends Component {
         if (this.state.nodes.length) {
             return (<div>
                         {this._generateGrid()}
-                        <Button 
-                            type="primary" 
-                            size='default'
-                            onClick={e => {
-                                notification.open({"message": "Refreshing network"})
-                                refresh_network()
-                                    .then(resp => resp.json())
-                                    .then(json_data => {
-                                        notification.open({"message": json_data["status"]})
-                                        this.componentDidMount()
-                                    })
-                            }}
-                            >refresh</Button>
                     </div>)
 
         } else {
@@ -181,6 +168,23 @@ export default class NetworkGrid extends Component {
         return (
             <div className="site-card-wrapper">
                 {this.chooseRender()}
+                <br></br>
+                <Button 
+                    type="primary" 
+                    size='default'
+                    onClick={e => {
+                        notification.open({"message": "Refreshing network"})
+                        refresh_network()
+                            .then(resp => resp.json())
+                            .then(json_data => {
+                                notification.open({"message": json_data["status"]})
+                                this.componentDidMount()
+                            })
+                            .catch(e => {
+                                notification.open({"message": "Error: " + e})
+                            })
+                    }}
+                    >refresh</Button>
             </div>
         )
     }
