@@ -5,6 +5,11 @@ function get_nodes() {
     return fetch(url);
 }
 
+function refresh_network() {
+    const url = apiServer + "/refresh"
+    return fetch(url)
+}
+
 function get_tags(mac) {
     const url = apiServer + "/fill_tags"
     const req_json = {"node_id": mac}
@@ -121,4 +126,14 @@ function stop_mitm(mac) {
     })
 }
 
-export { get_nodes, get_rule_options, add_rule, remove_rule, get_active_rules, get_tags, start_mitm, stop_mitm }
+export { 
+    get_nodes, 
+    refresh_network,
+    get_rule_options, 
+    add_rule, 
+    remove_rule, 
+    get_active_rules, 
+    get_tags, 
+    start_mitm, 
+    stop_mitm 
+}

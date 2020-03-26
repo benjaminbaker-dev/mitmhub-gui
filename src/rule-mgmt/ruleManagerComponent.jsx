@@ -12,9 +12,19 @@ export default class RuleManager extends Component {
     state = {
         mac_list: [],
         selected_node: null,
-        rule_options: {},
+        rule_options: null,
         selected_rule: null,
         params: null
+    }
+
+    resetState() {
+        this.setState({
+            mac_list: [],
+            selected_node: null,
+            rule_options: null,
+            selected_rule: null,
+            params: null
+        })
     }
 
     componentDidMount() {
@@ -22,41 +32,47 @@ export default class RuleManager extends Component {
             .then(resp => resp.json())
             .then(json_data => {
                 let nodes = json_data["network_nodes"]
-               
+
                 let mac_list = []
-                for(let node of nodes) {
+                for (let node of nodes) {
                     mac_list.push(node["mac"])
                 }
 
-                this.setState({mac_list: mac_list})
+                this.setState({ mac_list: mac_list })
 
+            })
+            .catch(e => {
+                this.resetState()
             })
     }
 
     _updateSelectedNodeAndGetRuleOptions = (new_state) => {
-         this.setState(new_state, () => { this._fetchRuleOptions() })
-       }
+        this.setState(new_state, () => { this._fetchRuleOptions() })
+    }
 
     _fetchRuleOptions() {
         get_rule_options(this.state.selected_node)
             .then(resp => resp.json())
             .then(json_data => {
-                this.setState({rule_options: json_data["response"]})
+                this.setState({ rule_options: json_data["response"] })
+            })
+            .catch(e => {
+                this.resetState()
             })
     }
 
     _generateNodeOptions() {
         let select_list = []
-        for(let mac of this.state.mac_list) {
+        for (let mac of this.state.mac_list) {
             select_list.push(<Option value={mac} className="menu-text">{mac}</Option>)
         }
-        return select_list    
+        return select_list
     }
 
     _generateRuleOptions() {
-        if(this.state.selected_node && this.state.rule_options) {
+        if (this.state.selected_node && this.state.rule_options) {
             let rule_list = []
-            for(let func_name in this.state.rule_options) {
+            for (let func_name in this.state.rule_options) {
                 rule_list.push(<Option value={func_name} className="menu-text">{func_name}</Option>)
             }
             return rule_list
@@ -66,70 +82,77 @@ export default class RuleManager extends Component {
     }
 
     _generateParamInput() {
-        if(this.state.selected_rule) {
+        if (this.state.selected_rule) {
             let param_list = []
-            for(let param of this.state.rule_options[this.state.selected_rule]) {
+            for (let param of this.state.rule_options[this.state.selected_rule]) {
                 param_list.push(
-                <div>
-                    <div className="param-title">{param}</div>
-                    <Input onChange={e => this.setState({...this.state, params: {...this.state.params, [param]: e.target.value}})}/>
-                    <br/>
-                </div>
-                )    
+                    <div>
+                        <div className="param-title">{param}</div>
+                        <Input onChange={e => this.setState({ ...this.state, params: { ...this.state.params, [param]: e.target.value } })} />
+                        <br />
+                    </div>
+                )
             }
             return param_list
         }
     }
 
     chooseRender() {
-        if(this.state.mac_list.length) {
-            return(
+        if (this.state.mac_list.length) {
+            return (
                 <div className="container">
                     <div className="subtitle">
-                    Node and Rule
+                        Node and Rule
                     </div>
-                    <Select 
-                        defaultValue="Pick node" 
-                        style={{ width: 200, marginRight: "1vh" }} 
+                    <Select
+                        defaultValue="Pick node"
+                        style={{ width: 200, marginRight: "1vh" }}
                         showSearch
-                        onChange={e => {this._updateSelectedNodeAndGetRuleOptions({selected_node:e, rule_options: {}, selected_rule: null})}}>
+                        onChange={e => { this._updateSelectedNodeAndGetRuleOptions({ selected_node: e, rule_options: null, selected_rule: null }) }}>
                         {this._generateNodeOptions()}
                     </Select>
-                    <Select 
-                        defaultValue="Pick rule"  
-                        style={{ width: 200 }} 
+                    <Select
+                        defaultValue="Pick rule"
+                        style={{ width: 200 }}
                         showSearch
-                        onChange={e => this.setState({selected_rule: e})}>
+                        onChange={e => this.setState({ selected_rule: e })}>
                         {this._generateRuleOptions()}
                     </Select>
                     <div className="subtitle">
-                    Rule Params
+                        Rule Params
                     </div>
                     {this._generateParamInput()}
                     <div className="submit-div">
-                        <Button type="primary" shape="round" size='large' 
-                        onClick={e => {
-                            if(this.state.selected_rule && this.state.params) {
-                                add_rule(this.state.selected_node, this.state.selected_rule, this.state.params)
-                                    .then(resp => resp.json())
-                                    .then(json_data => {
-                                        this.setState({rule_options: {}, selected_rule: null})
-                                        notification.open({"message": json_data["status"]})
-                                    }); 
-                            } else {
-                                notification.open({"message": "Please pick rule and fill params"})
-                            } 
-                          }
-                        }>add rule</Button>
+                        <Button type="primary" shape="round" size='large'
+                            onClick={e => {
+                                if (this.state.selected_rule && this.state.params) {
+                                    add_rule(this.state.selected_node, this.state.selected_rule, this.state.params)
+                                        .then(resp => resp.json())
+                                        .then(json_data => {
+                                            if(json_data["status"] === "Successfully added rule") {
+                                                this.setState({ rule_options: {}, selected_rule: null })
+                                            }
+                                            notification.open({ "message": json_data["status"] })
+                                        });
+                                } else {
+                                    notification.open({ "message": "Please pick rule and fill params" })
+                                }
+                            }
+                            }>add rule</Button>
                     </div>
-                    <ExistingRuleTable mac={this.state.selected_node}/>
+                    <ExistingRuleTable mac={this.state.selected_node} />
                 </div>
             )
         } else {
-            return(<Spin size="large"/>)
+            this.componentDidMount()
+            return (
+                <div className="container">
+                    <Spin size="large" />
+                </div>
+            )
         }
     }
-
+x
 
     render() {
         return this.chooseRender()
