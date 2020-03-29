@@ -54,6 +54,7 @@ export default class RuleManager extends Component {
         get_rule_options(this.state.selected_node)
             .then(resp => resp.json())
             .then(json_data => {
+                console.log(json_data["response"])
                 this.setState({ rule_options: json_data["response"] })
             })
             .catch(e => {
@@ -84,7 +85,15 @@ export default class RuleManager extends Component {
     _generateParamInput() {
         if (this.state.selected_rule) {
             let param_list = []
-            for (let param of this.state.rule_options[this.state.selected_rule]) {
+            const description = this.state.rule_options[this.state.selected_rule]["param_explanation"]
+            
+            param_list.push(
+                <div className="param-desc">
+                    {description}
+                </div>
+            )
+    
+            for (let param of this.state.rule_options[this.state.selected_rule]["filter_params"]) {
                 param_list.push(
                     <div>
                         <div className="param-title">{param}</div>

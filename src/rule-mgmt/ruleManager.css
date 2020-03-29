@@ -65,6 +65,15 @@
     color: #03dac6
 }
 
+
+.param-desc {
+    color: #03dac6;
+    font-size: 1em;
+    font-style: italic;
+    margin-bottom: 2vh;
+    white-space: pre-wrap;
+}
+
 .param-title {
     color: #03dac6;
     font-size: 1em;
