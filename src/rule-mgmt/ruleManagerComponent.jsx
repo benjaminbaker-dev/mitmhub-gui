@@ -7,13 +7,14 @@ import { Select, Button, Input, notification, Spin } from 'antd';
 import ExistingRuleTable from "../existing-rules/existingRuleTableComponent";
 
 const { Option } = Select;
+const defaultRule = "Pick rule"
 
 export default class RuleManager extends Component {
     state = {
         mac_list: [],
         selected_node: null,
         rule_options: null,
-        selected_rule: null,
+        selected_rule: defaultRule,
         params: null
     }
 
@@ -27,23 +28,28 @@ export default class RuleManager extends Component {
         })
     }
 
-    componentDidMount() {
+    refreshNodes() {
         get_nodes()
             .then(resp => resp.json())
             .then(json_data => {
                 let nodes = json_data["network_nodes"]
-
                 let mac_list = []
+
                 for (let node of nodes) {
                     mac_list.push(node["mac"])
                 }
 
-                this.setState({ mac_list: mac_list })
-
+                if(JSON.stringify(this.state.mac_list) !== JSON.stringify(mac_list)) {
+                    this.setState({ mac_list: mac_list })
+                }      
             })
             .catch(e => {
                 this.resetState()
             })
+    }
+    
+    componentDidMount() {
+        this.refreshNodes()
     }
 
     _updateSelectedNodeAndGetRuleOptions = (new_state) => {
@@ -54,8 +60,9 @@ export default class RuleManager extends Component {
         get_rule_options(this.state.selected_node)
             .then(resp => resp.json())
             .then(json_data => {
-                console.log(json_data["response"])
-                this.setState({ rule_options: json_data["response"] })
+                if(JSON.stringify(this.state.rule_options) !== JSON.stringify(json_data["response"])) {
+                    this.setState({ rule_options: json_data["response"] })
+                }
             })
             .catch(e => {
                 this.resetState()
@@ -67,7 +74,7 @@ export default class RuleManager extends Component {
         for (let mac of this.state.mac_list) {
             select_list.push(<Option value={mac} className="menu-text">{mac}</Option>)
         }
-        return select_list
+        return select_list   
     }
 
     _generateRuleOptions() {
@@ -83,7 +90,7 @@ export default class RuleManager extends Component {
     }
 
     _generateParamInput() {
-        if (this.state.selected_rule) {
+        if (this.state.selected_rule !== defaultRule) {
             let param_list = []
             const description = this.state.rule_options[this.state.selected_rule]["param_explanation"]
             
@@ -117,13 +124,15 @@ export default class RuleManager extends Component {
                         defaultValue="Pick node"
                         style={{ width: 200, marginRight: "1vh" }}
                         showSearch
-                        onChange={e => { this._updateSelectedNodeAndGetRuleOptions({ selected_node: e, rule_options: null, selected_rule: null }) }}>
+                        onFocus={e => this.refreshNodes()}
+                        onChange={e => { this._updateSelectedNodeAndGetRuleOptions({ selected_node: e, rule_options: null, selected_rule: defaultRule }) }}>
                         {this._generateNodeOptions()}
                     </Select>
                     <Select
-                        defaultValue="Pick rule"
                         style={{ width: 200 }}
+                        value={this.state.selected_rule}
                         showSearch
+                        onFocus={e => this._fetchRuleOptions()}
                         onChange={e => this.setState({ selected_rule: e })}>
                         {this._generateRuleOptions()}
                     </Select>
@@ -139,7 +148,7 @@ export default class RuleManager extends Component {
                                         .then(resp => resp.json())
                                         .then(json_data => {
                                             if(json_data["status"] === "Successfully added rule") {
-                                                this.setState({ rule_options: {}, selected_rule: null })
+                                                this.setState({ rule_options: {}, selected_rule: defaultRule})
                                             }
                                             notification.open({ "message": json_data["status"] })
                                         });
@@ -153,7 +162,6 @@ export default class RuleManager extends Component {
                 </div>
             )
         } else {
-            this.componentDidMount()
             return (
                 <div className="container">
                     <Spin size="large" />

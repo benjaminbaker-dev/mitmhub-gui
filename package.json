@@ -1,5 +1,6 @@
 {
   "name": "mitmhub-gui",
+  "homepage": ".",
   "version": "1.0.0",
   "description": "",
   "main": "electron-app/main.js",

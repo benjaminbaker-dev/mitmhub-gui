@@ -15,7 +15,7 @@ export default class TabBar extends Component {
                     <NetworkGrid/>
                 </TabPane>
                 <TabPane tab="Rule Management" key="2">
-                    <RuleManager />
+                    <RuleManager/>
                 </TabPane>
           </Tabs>
         )

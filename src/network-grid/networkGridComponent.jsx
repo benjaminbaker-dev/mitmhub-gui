@@ -22,11 +22,11 @@ export default class NetworkGrid extends Component {
                         .then(resp => resp.json())
                         .then(json_data => {
                             notification.open({ "message": json_data["status"] })
-                            this.componentDidMount()
+                            this.refreshNodes()
                         })
                         .catch(e => {
                             notification.open({ "message": "Error: " + e })
-                            this.componentDidMount()
+                            this.refreshNodes()
                         })
                 }}>
                 get tags
@@ -38,11 +38,11 @@ export default class NetworkGrid extends Component {
                         .then(resp => resp.json())
                         .then(json_data => {
                             notification.open({ "message": json_data["status"] })
-                            this.componentDidMount()
+                            this.refreshNodes()
                         })
                         .catch(e => {
                             notification.open({ "message": "Error: " + e })
-                            this.componentDidMount()
+                            this.refreshNodes()
                         })
                 }}>
                 start mitm
@@ -54,25 +54,29 @@ export default class NetworkGrid extends Component {
                         .then(resp => resp.json())
                         .then(json_data => {
                             notification.open({ "message": json_data["status"] })
-                            this.componentDidMount()
+                            this.refreshNodes()
                         })
                         .catch(e => {
                             notification.open({ "message": "Error: " + e })
-                            this.componentDidMount()
+                            this.refreshNodes()
                         })
                 }}>
                 stop mitm
           </Menu.Item>
         </Menu>
     );
-
-    componentDidMount() {
+    
+    refreshNodes() {
         get_nodes()
             .then(resp => resp.json())
             .then(json_data => this.setState({ nodes: json_data["network_nodes"] }))
             .catch(e => {
                 this.setState({ nodes: [] })
             })
+    }
+
+    componentDidMount() {
+        this.refreshNodes()
     }
 
     _addTagsToNode(mac, tags) {
@@ -159,7 +163,7 @@ export default class NetworkGrid extends Component {
                     </div>)
 
         } else {
-            this.componentDidMount();
+            this.refreshNodes();
             return (<Spin size="large" />)
         }
     }
@@ -178,7 +182,7 @@ export default class NetworkGrid extends Component {
                             .then(resp => resp.json())
                             .then(json_data => {
                                 notification.open({"message": json_data["status"]})
-                                this.componentDidMount()
+                                this.refreshNodes()
                             })
                             .catch(e => {
                                 notification.open({"message": "Error: " + e})
