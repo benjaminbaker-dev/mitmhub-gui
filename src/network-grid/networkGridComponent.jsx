@@ -185,6 +185,7 @@ export default class NetworkGrid extends Component {
                                 this.refreshNodes()
                             })
                             .catch(e => {
+                                this.setState({ nodes: []})
                                 notification.open({"message": "Error: " + e})
                             })
                     }}

@@ -23,7 +23,7 @@ export default class RuleManager extends Component {
             mac_list: [],
             selected_node: null,
             rule_options: null,
-            selected_rule: null,
+            selected_rule: defaultRule,
             params: null
         })
     }
@@ -114,6 +114,7 @@ export default class RuleManager extends Component {
     }
 
     chooseRender() {
+        this.refreshNodes();
         if (this.state.mac_list.length) {
             return (
                 <div className="container">
