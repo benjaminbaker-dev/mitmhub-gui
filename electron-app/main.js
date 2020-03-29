@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcRenderer } = require('electron')
 var sudo = require('sudo-prompt');
 var options = {
   name: 'MITMhub'
@@ -10,9 +10,11 @@ function createWindow () {
       width: 800,
       height: 650,
       webPreferences: {
-        nodeIntegration: true
+        nodeIntegration: true,
+        preload: __dirname + '/preload.js'
       }
     })
+
     
     sudo.exec('python3 /Users/benjaminbaker/Desktop/mitmhub/server.py', options, 
       function(error, stdout, stderr) {
@@ -21,7 +23,11 @@ function createWindow () {
         } 
       }
     );
+    ipcRenderer.on('setup', () => {
+      console.log("d")
+    });
     win.loadURL("http://localhost:3000")
+ 
   }
 
   

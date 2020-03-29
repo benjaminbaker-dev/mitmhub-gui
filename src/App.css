@@ -6,3 +6,40 @@
     margin-right: 2vh;
 }
 
+.site-card-wrapper {
+    background: #303030;
+    padding: 5vh;
+    margin-left: 3vh;
+    margin-right: 3vh;
+}
+
+.os-title {
+    text-align: center;
+    margin-top: 1vh;
+    font-weight: bolder;
+    font-size: 3em;
+    color: #03dac6;
+}
+
+.ant-card-body:hover {
+    -webkit-box-shadow:inset 0px 0px 0px 1px #03dac6;
+    -moz-box-shadow:inset 0px 0px 0px 1px #03dac6;  
+    box-shadow:inset 0px 0px 0px 1px #03dac6;
+}
+
+.image {
+    height: 25vh !important;
+    width: 25vh !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.ant-notification-notice {
+    background: #303030 !important;
+}
+
+.ant-notification-notice-message {
+    color: #03dac6
+}
