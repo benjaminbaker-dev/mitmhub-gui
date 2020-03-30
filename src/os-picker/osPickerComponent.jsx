@@ -13,7 +13,7 @@ export default class OsPicker extends Component {
                 <Col span={12}>
                     <Link to="/osx-setup">
                     <Card bordered={false} style={{ backgroundColor: "#424242"}}>
-                        <img className="image" src={process.env.PUBLIC_URL + "/osx.png"}/>
+                        <img className="image" src={"https://www.transparentpng.com/download/apple-logo/hRoKDb-apple-logo-transparent.png"}/>
                         <div className="os-title">
                         OSX
                         </div>
@@ -23,7 +23,7 @@ export default class OsPicker extends Component {
                 <Col span={12}>
                     <Link to="/linux-setup">
                     <Card bordered={false} style={{ backgroundColor: "#424242"}}>
-                        <img className="image" src={process.env.PUBLIC_URL + "/linux.png"}/>
+                        <img className="image" src={"https://www.transparentpng.com/download/penguin/grap6l-penguin-hd-image.png"}/>
                         <div className="os-title">
                         Linux
                         </div>

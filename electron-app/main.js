@@ -7,67 +7,67 @@ const os = require('os')
 
 var sudo = require('sudo-prompt');
 var options = {
-  name: 'MITMhub'
+    name: 'MITMhub'
 };
 
 const REQ_INSTALL_CERTFILE = "installed.json"
 
 function areRequirementsInstalled() {
-  return fs.existsSync(REQ_INSTALL_CERTFILE)
+    return fs.existsSync(REQ_INSTALL_CERTFILE)
 }
 
 function markRequirementsAsInstalled() {
-  fs.writeFileSync(REQ_INSTALL_CERTFILE, JSON.stringify({"status": "SKRPOP"}))
+    fs.writeFileSync(REQ_INSTALL_CERTFILE, JSON.stringify({ "status": "SKRPOP" }))
 }
 
 function startServer() {
-  sudo.exec('python3 electron-app/mitmhub/server.py', options, 
-  function(error, stdout, stderr) {
-    if (error) {
-      throw error;
-    } 
-  });
+    sudo.exec('python3 electron-app/mitmhub/server.py', options,
+        function (error, stdout, stderr) {
+            if (error) {
+                throw error;
+            }
+        });
 }
 
-function createWindow () {
+function createWindow() {
     const win = new BrowserWindow({
-      width: 800,
-      height: 650,
-      webPreferences: {
-        nodeIntegration: true
-      }
+        width: 800,
+        height: 650,
+        webPreferences: {
+            nodeIntegration: true
+        }
     })
     win.loadFile('electron-app/build/index.html')
 
     // wait until gui is up, and then do requirement check
     ipcMain.once('init', (event, args) => {
-      if(areRequirementsInstalled()) {
-        event.returnValue = JSON.stringify({"installed": true})
-      } else {
-        event.returnValue = JSON.stringify({"installed": false})
-      }
+        if (areRequirementsInstalled()) {
+            event.returnValue = JSON.stringify({ "installed": true })
+        } else {
+            event.returnValue = JSON.stringify({ "installed": false })
+        }
     })
 
     // if requirements are not installed, add listener for os type
-    if(!areRequirementsInstalled()) {
-      ipcMain.once('setup', (event, args) => {
-        let py = spawn('python3', ['electron-app/mitmhub/install_requirements.py', `--os=${args}`])      
-        py.on('close', (exit_code) => {
-          if(exit_code == 0) {
-            markRequirementsAsInstalled()
-            event.returnValue = JSON.stringify({"status": "Success"})
-            startServer();
-          } 
-          event.returnValue = JSON.stringify({"status": "Failure"})
-  
-        })
-       });
-    } else {
-      // if reqs are in place - boot up
-      startServer();
-    }
-  }
+    if (!areRequirementsInstalled()) {
+        ipcMain.once('setup', (event, args) => {
+            let py = spawn('python3', ['electron-app/mitmhub/install_requirements.py', `--os=${args}`])
+            py.on('close', (exit_code) => {
+                if (exit_code == 0) {
+                    markRequirementsAsInstalled()
+                    event.returnValue = JSON.stringify({ "status": "Success" })
+                    startServer();
+                }
+                event.returnValue = JSON.stringify({ "status": "Failure" })
 
-  
-  app.whenReady().then(createWindow)
+            })
+        });
+    } else {
+        // if reqs are in place - boot up
+        startServer();
+    }
+}
+
+
+app.whenReady().then(createWindow)
 
