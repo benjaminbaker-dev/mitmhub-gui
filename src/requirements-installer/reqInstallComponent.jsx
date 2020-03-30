@@ -5,6 +5,7 @@ import { Spin, notification } from 'antd';
 
 import "./reqInstall.css"
 
+const { ipcRenderer } = window.require("electron");
 
 export default class ReqInstaller extends Component {
     state = {
@@ -12,7 +13,11 @@ export default class ReqInstaller extends Component {
     }
 
     componentDidMount() {
-        //start listener for finished install
+        console.log("here")
+        let response = JSON.parse(ipcRenderer.sendSync('setup', this.props.os))
+        if(response["status"] == "Success") { 
+            this.setState({installed: true})
+        }
     }
 
     chooseWarningMessage() {
@@ -25,10 +30,10 @@ export default class ReqInstaller extends Component {
     chooseRender() {
         if(this.state.installed) {
             return (
-            <div>
+            <div style={{textAlign: "center"}}>
                 <span className="install-text">success</span>
                 <br/>
-                <span className="install-warning"><Link to="/app">take me to mitmhub</Link></span> 
+                <Link to="/app"><span className="install-warning">take me to mitmhub</span></Link>
             </div>)
         } else {
             return (

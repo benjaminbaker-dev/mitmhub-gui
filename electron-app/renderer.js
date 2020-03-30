@@ -1,19 +1,11 @@
-const ipc = require('electron').ipcRenderer,
-
-syncBtn  = document.querySelector('#syncBtn');
-asyncBtn = document.querySelector('#asyncBtn');
+const ipc = require('electron').ipcRenderer
 
 let replyDiv = document.querySelector('#reply');
 
-syncBtn.addEventListener('click', () => {
- let reply = ipc.sendSync('setup','osx');
- replyDiv.innerHTML = reply;
-});
+let are_reqs_installed = ipc.sendSync('init', 'hello, world')
 
-asyncBtn.addEventListener('click', () => {
- ipc.send('aSynMessage','A async message to main')
-});
+if(!are_reqs_installed["installed"]) {
+    let install_status = ipc.sendSync('setup', 'osx')
+    replyDiv.innerHTML = install_status;
+}
 
-ipc.on('asynReply', (event, args) => {
- replyDiv.innerHTML = args;
-});

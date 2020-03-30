@@ -4,8 +4,6 @@ import { Row, Col, Card } from 'antd';
 
 import "./osPicker.css"
 
-import linux from '../linux.png';
-import osx from '../osx.png'
 
 export default class OsPicker extends Component {
     render () {
@@ -15,7 +13,7 @@ export default class OsPicker extends Component {
                 <Col span={12}>
                     <Link to="/osx-setup">
                     <Card bordered={false} style={{ backgroundColor: "#424242"}}>
-                        <img className="image" src={osx}/>
+                        <img className="image" src={process.env.PUBLIC_URL + "/osx.png"}/>
                         <div className="os-title">
                         OSX
                         </div>
@@ -25,7 +23,7 @@ export default class OsPicker extends Component {
                 <Col span={12}>
                     <Link to="/linux-setup">
                     <Card bordered={false} style={{ backgroundColor: "#424242"}}>
-                        <img className="image" src={linux}/>
+                        <img className="image" src={process.env.PUBLIC_URL + "/linux.png"}/>
                         <div className="os-title">
                         Linux
                         </div>

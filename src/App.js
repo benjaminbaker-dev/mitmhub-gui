@@ -1,50 +1,33 @@
 import React, { Component } from 'react';
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Spin } from 'antd';
+import { withRouter } from "react-router-dom";
 
 import './App.css';
 
-
 import Title from './title/titleComponent';
-import TabBar from './tab-bar/tabBarComponent';
-import ReqInstaller from './requirements-installer/reqInstallComponent';
-import OsPicker from './os-picker/osPickerComponent';
 
-function generateRoute() {
-  return (
-    <Router>
-      <div>
-        {/* A <Switch> looks through its children <Route>s and
-        renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/">
-            <Spin size="large"></Spin>
-          </Route>
-          <Route path="/setup">
-            <OsPicker />
-          </Route>
-          <Route path="/osx-setup">
-            <ReqInstaller os="osx" />
-          </Route>
-          <Route path="/linux-setup">
-            <ReqInstaller os="linux" />
-          </Route>
-          <Route path="/app">
-            <TabBar />
-          </Route>
-        </Switch>
-      </div>
-    </Router>)
-}
 
-export default class App extends Component {
+const { ipcRenderer } = window.require("electron");
+
+class App extends Component {
+  componentDidMount() {
+    let response = JSON.parse(ipcRenderer.sendSync('init', 'hello, world'))
+    let are_reqs_installed = response["installed"]
+
+    if(are_reqs_installed) {
+      this.props.history.push("/app")
+    } else {
+      this.props.history.push("/setup")
+    }
+  }
+  
   render() {
     return (
       <div className="appContainer">
         <Title />
-        <TabBar />
       </div>
     );
   }
 }
+
+export default withRouter(App)
