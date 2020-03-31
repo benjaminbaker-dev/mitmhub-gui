@@ -9,12 +9,15 @@ const { ipcRenderer } = window.require("electron");
 
 class ReqInstaller extends Component {
     componentDidMount() {
-        let response = JSON.parse(ipcRenderer.sendSync('setup', this.props.os))
-        if (response["status"] == "Success") {
-            this.props.history.push("/app")
-        } else {
-            this.props.history.push("/setup")
-        }
+        ipcRenderer.send('setup', this.props.os)
+        ipcRenderer.on('asynReply', (event, args) => {
+            let response = JSON.parse(args)
+            if (response["status"] == "Success") {
+                this.props.history.push("/app")
+            } else {
+                this.props.history.push("/setup")
+            }
+        })
     }
 
     chooseWarningMessage() {
@@ -36,3 +39,4 @@ class ReqInstaller extends Component {
 }
 
 export default withRouter(ReqInstaller)
+

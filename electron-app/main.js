@@ -38,13 +38,14 @@ function createWindow() {
         }
     })
     win.loadFile('electron-app/build/index.html')
+    win.openDevTools()
 
     // wait until gui is up, and then do requirement check
     ipcMain.once('init', (event, args) => {
         if (areRequirementsInstalled()) {
-            event.returnValue = JSON.stringify({ "installed": true })
+            event.sender.send("asynReply", JSON.stringify({ "installed": true }))
         } else {
-            event.returnValue = JSON.stringify({ "installed": false })
+            event.sender.send("asynReply", JSON.stringify({ "installed": false }))
         }
     })
 
@@ -55,10 +56,10 @@ function createWindow() {
             py.on('close', (exit_code) => {
                 if (exit_code == 0) {
                     markRequirementsAsInstalled()
-                    event.returnValue = JSON.stringify({ "status": "Success" })
+                    event.sender.send("asynReply", JSON.stringify({ "status": "Success" }))
                     startServer();
                 }
-                event.returnValue = JSON.stringify({ "status": "Failure" })
+                event.sender.send("asynReply", JSON.stringify({ "status": "Success" }))
 
             })
         });

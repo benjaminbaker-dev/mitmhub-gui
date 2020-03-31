@@ -11,16 +11,19 @@ const { ipcRenderer } = window.require("electron");
 
 class App extends Component {
   componentDidMount() {
-    let response = JSON.parse(ipcRenderer.sendSync('init', 'hello, world'))
-    let are_reqs_installed = response["installed"]
+    ipcRenderer.send('init', 'hello, world')
+    ipcRenderer.on('asynReply', (event, args) => {
+      let response = JSON.parse(args)
+      let are_reqs_installed = response["installed"]
 
-    if(are_reqs_installed) {
-      this.props.history.push("/app")
-    } else {
-      this.props.history.push("/setup")
-    }
+      if (are_reqs_installed) {
+        this.props.history.push("/app")
+      } else {
+        this.props.history.push("/setup")
+      }
+    })
   }
-  
+
   render() {
     return (
       <div className="appContainer">
