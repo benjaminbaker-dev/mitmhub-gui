@@ -38,7 +38,6 @@ function createWindow() {
         }
     })
     win.loadFile('electron-app/build/index.html')
-    win.openDevTools()
 
     // wait until gui is up, and then do requirement check
     ipcMain.once('init', (event, args) => {
