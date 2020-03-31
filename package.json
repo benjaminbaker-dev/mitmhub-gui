@@ -5,7 +5,7 @@
   "description": "Automatically perform Man-In-The-Middle (mitm) attacks using Python",
   "main": "electron-app/main.js",
   "build": {
-    "asar": true,
+    "asar": false,
     "appId": "com.mitmhub.app",
     "extends": null,
     "files": [
