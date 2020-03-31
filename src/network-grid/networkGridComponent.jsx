@@ -29,7 +29,7 @@ export default class NetworkGrid extends Component {
                             this.refreshNodes()
                         })
                 }}>
-                get tags
+                run detailed scan
           </Menu.Item>
             <Menu.Item key="1" className="menu-text"
                 onClick={e => {
