@@ -1,13 +1,25 @@
 {
-  "name": "mitmhub-gui",
+  "name": "MITMhub",
   "homepage": ".",
   "version": "1.0.0",
-  "description": "",
+  "description": "Automatically perform Man-In-The-Middle (mitm) attacks using Python",
   "main": "electron-app/main.js",
+  "build": {
+    "asar": false,
+    "appId": "com.mitmhub.app",
+    "extends": null,
+    "files": [
+      "electron-app/mitmhub/**",
+      "electron-app/react-build/**",
+      "electron-app/main.js"
+    ],
+    "directories":{
+      "buildResources": "electron-app/assets"
+    }
+  },
   "dependencies": {
     "@ant-design/icons": "^4.0.3",
     "antd": "^3.26.14",
-    "electron": "^8.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
@@ -19,9 +31,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
-  "author": "",
+  "author": "Feiglin and Baker",
   "license": "ISC",
   "browserslist": {
     "production": [
@@ -34,5 +48,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron-builder": "^22.4.1",
+    "electron": "^8.1.1"
   }
 }
