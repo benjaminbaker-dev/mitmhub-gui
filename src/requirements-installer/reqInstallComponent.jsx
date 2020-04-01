@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { withRouter } from "react-router-dom";
-import { Spin } from 'antd';
+import { Spin, notification } from 'antd';
 
 import "./reqInstall.css"
 
@@ -10,8 +10,10 @@ const { ipcRenderer } = window.require("electron");
 class ReqInstaller extends Component {
     componentDidMount() {
         ipcRenderer.send('setup', this.props.os)
-        ipcRenderer.on('asynReply', (event, args) => {
+        ipcRenderer.once('asynReply', (event, args) => {
             let response = JSON.parse(args)
+            notification.open({"message": response["status"]})
+
             if (response["status"] == "Success") {
                 this.props.history.push("/app")
             } else {

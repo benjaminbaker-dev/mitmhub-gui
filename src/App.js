@@ -12,7 +12,7 @@ const { ipcRenderer } = window.require("electron");
 class App extends Component {
   componentDidMount() {
     ipcRenderer.send('init', 'hello, world')
-    ipcRenderer.on('asynReply', (event, args) => {
+    ipcRenderer.once('asynReply', (event, args) => {
       let response = JSON.parse(args)
       let are_reqs_installed = response["installed"]
 

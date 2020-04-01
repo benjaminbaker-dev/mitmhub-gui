@@ -1,6 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, net } = require('electron')
 const { spawn } = require('child_process')
-
 
 const fs = require('fs');
 const os = require('os')
@@ -10,7 +9,11 @@ var options = {
     name: 'MITMhub'
 };
 
-const REQ_INSTALL_CERTFILE = `${__dirname}/installed.json`
+const OSX_PYTHON3 = "/Library/Frameworks/Python.framework/Versions/3.7/bin/python3"
+const LINUX_PYTHON3 = "/user/bin/python3"
+let PYTHON3 = OSX_PYTHON3
+
+const REQ_INSTALL_CERTFILE = `${os.tmpdir()}/installed.json`
 
 function areRequirementsInstalled() {
     return fs.existsSync(REQ_INSTALL_CERTFILE)
@@ -20,8 +23,8 @@ function markRequirementsAsInstalled() {
     fs.writeFileSync(REQ_INSTALL_CERTFILE, JSON.stringify({ "status": "SKRPOP" }))
 }
 
-function startServer() {
-    sudo.exec("python3 ./mitmhub/server.py", options,
+function startServer(python3) {
+    sudo.exec(`${python3} ${__dirname}/mitmhub/server.py`, options,
         function (error, stdout, stderr) {
             if (error) {
                 throw error;
@@ -50,23 +53,50 @@ function createWindow() {
 
     // if requirements are not installed, add listener for os type
     if (!areRequirementsInstalled()) {
-        ipcMain.once('setup', (event, args) => {
-            let py = spawn('python3', ["./mitmhub/install_requirements.py", `--os=${args}`])
+        ipcMain.on('setup', (event, args) => {
+            if(args == "linux") {
+                PYTHON3 = LINUX_PYTHON3
+            }
+            let py = spawn(`${PYTHON3}`, [`${__dirname}/mitmhub/install_requirements.py`, `--os=${args}`])   
+            py.on('error', (err) => {
+                event.sender.send("asynReply", JSON.stringify({ "status": "Failure: " + err }))
+            })  
+
+            let output = ""
+            py.stderr.on('data', (data) => {
+                output = output + data
+            })
+
             py.on('close', (exit_code) => {
-                if (exit_code == 0) {
+                if (exit_code === 0) {
                     markRequirementsAsInstalled()
                     event.sender.send("asynReply", JSON.stringify({ "status": "Success" }))
-                    startServer();
+                    startServer(PYTHON3);
+                } else {
+                    event.sender.send("asynReply", JSON.stringify({ "status": "Failure: " + output }))
                 }
-                event.sender.send("asynReply", JSON.stringify({ "status": "Success" }))
             })
         });
     } else {
         // if reqs are in place - boot up
-        startServer();
+        startServer(PYTHON3);
     }
+
+    win.on('close', () => {
+        const req = net.request({
+            method: 'POST',
+            url: 'http://localhost:9846/shutdown_server',
+        }) 
+
+        req.setHeader('Content-Type', 'application/json')
+        req.write(JSON.stringify({"id": "YEET"}))
+        req.end()
+
+        req.on('response', (resp) => {
+            console.log(resp.statusCode)
+        })
+    })  
 }
 
 
 app.whenReady().then(createWindow)
-
